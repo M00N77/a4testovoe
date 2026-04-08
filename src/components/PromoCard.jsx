@@ -49,7 +49,11 @@ export default function PromoCard() {
                 onSelectPlan={setSelectedPlanId}
                 onPlansLoaded={handlePlansLoaded}
               />
-              <OfferNote />
+
+              <div className="mt-4 grid grid-cols-1 gap-4 md:mt-5 min-[970px]:grid-cols-3">
+                <OfferNote className="min-[970px]:col-span-2" />
+              </div>
+
               <ConsentBlock
                 checked={isConsentChecked}
                 onChange={setIsConsentChecked}
