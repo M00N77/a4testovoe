@@ -1,4 +1,5 @@
-import { useCallback, useState } from 'react'
+import React from 'react'
+import { useState } from 'react'
 
 import BuyButton from './BuyButton.jsx'
 import ConsentBlock from './ConsentBlock.jsx'
@@ -8,31 +9,23 @@ import PlansGrid from './PlansGrid.jsx'
 import PromoImage from './PromoImage.jsx'
 import RefundGuaranteeCard from './RefundGuaranteeCard.jsx'
 import TimerBar from './TimerBar.jsx'
+import useSelectedPlan from '../hooks/useSelectedPlan.js'
 
 export default function PromoCard() {
   const [isConsentChecked, setIsConsentChecked] = useState(false)
-  const [plans, setPlans] = useState([])
-  const [selectedPlanId, setSelectedPlanId] = useState(null)
-
-  const selectedPlan = plans.find((plan) => plan.planKey === selectedPlanId) ?? null
-
-  const handlePlansLoaded = useCallback((loadedPlans, defaultSelectedPlanId) => {
-    setPlans(loadedPlans)
-    setSelectedPlanId((currentSelectedPlanId) => {
-      if (currentSelectedPlanId && loadedPlans.some((plan) => plan.planKey === currentSelectedPlanId)) {
-        return currentSelectedPlanId
-      }
-
-      return defaultSelectedPlanId ?? loadedPlans[0]?.planKey ?? null
-    })
-  }, [])
+  const {
+    selectedPlan,
+    selectedPlanId,
+    setSelectedPlanId,
+    handlePlansLoaded,
+  } = useSelectedPlan()
 
   return (
     <div className="min-h-screen bg-[#232829]">
       <section>
         <TimerBar />
         <div className="mx-auto mt-4 max-w-[1600px] px-4 pb-8 sm:px-5 md:mt-8 md:px-8 md:pb-10 lg:mt-12 lg:px-14 xl:px-[170px]">
-          <h1 className="mb-8  text-[32px] leading-[0.95] text-white md:mb-10 md:text-[36px] lg:mb-[50px]lg:text-[40px] lg:whitespace-nowrap">
+          <h1 className="mb-8 text-[32px] leading-[0.95] text-white md:mb-10 md:text-[36px] lg:mb-[50px] lg:text-[40px] lg:whitespace-nowrap">
             Выбери подходящий для себя <span className="text-[#FDB056]">тариф</span>
           </h1>
 
@@ -62,7 +55,7 @@ export default function PromoCard() {
               />
             </div>
 
-            <div className="min-[970px]:col-start-2">
+            <div className="min-w-0 min-[970px]:col-start-2">
               <LegalDisclaimer />
             </div>
           </div>
@@ -70,7 +63,6 @@ export default function PromoCard() {
           <RefundGuaranteeCard />
         </div>
       </section>
-
     </div>
   )
 }

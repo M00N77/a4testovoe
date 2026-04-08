@@ -22,7 +22,7 @@ export default function TimerBar() {
   const { formattedTime, timerColor } = usePersistentTimer()
 
   return (
-    <div className="flex flex-col items-center justify-center bg-[#1D5B43] px-4 py-3 text-center md:py-4">
+    <div className="flex    flex-col items-center justify-center bg-[#1D5B43] px-4 py-3 text-center md:py-4">
       <h2 className="text-[18px] font-medium text-white md:text-[24px]">
         Успейте открыть пробную неделю
       </h2>

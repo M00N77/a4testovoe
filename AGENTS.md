@@ -55,34 +55,37 @@ npm run preview
 ```
 
 ### Tests
-There is currently no test framework configured in this repository.
+The repository uses Vitest with the `jsdom` environment and Testing Library.
 
-Observed state:
-- No `test` script in `package.json`.
-- No Vitest, Jest, Cypress, or Playwright dependency.
-- No `tests/` directory or obvious `*.test.*` / `*.spec.*` files.
-
-Commands that do not currently exist:
+Default test command:
 
 ```bash
-npm test
 npm run test
-npm run test -- <pattern>
+```
+
+Run tests once in CI/non-watch mode:
+
+```bash
+npm run test:run
 ```
 
 ### Running a single test
-Not currently possible because the repo has no test runner and no test script.
+Run a single file with:
 
-If a test runner is added later, update this file with:
-- the default test command,
-- the exact single-test command,
-- any required environment variables,
-- whether tests run in watch mode by default.
+```bash
+npm run test -- src/components/PromoCard.test.jsx
+```
+
+Run a single named test with:
+
+```bash
+npm run test -- -t "disables purchase until consent is given"
+```
 
 ## Validation Expectations
 - After JavaScript or JSX changes, run `npm run lint`.
-- After meaningful UI or behavior changes, run `npm run build`.
-- If validation is limited because no automated tests exist, say so explicitly.
+- After behavior or state-management changes, run `npm run test:run`.
+- After meaningful UI changes, run `npm run build`.
 
 ## Repository-Specific Instruction Files
 Checked for additional agent rules:
@@ -95,9 +98,10 @@ There are currently no extra Cursor or Copilot instructions to inherit.
 ## Source Layout Notes
 - `src/main.jsx` mounts the app with `createRoot()` and keeps `StrictMode` enabled.
 - `src/App.jsx` should stay thin and currently renders `PromoCard` only.
-- `src/components/` contains the promo card, pricing cards, timer, consent UI, and modal pieces.
+- `src/components/` contains the promo card, pricing cards, timer, consent UI, and supporting promo blocks.
 - `src/hooks/usePersistentTimer.js` owns countdown persistence and formatting.
-- `src/data/plans.js` holds plan seed data.
+- `src/hooks/useSelectedPlan.js` owns selected-plan state and fallback logic.
+- `src/hooks/useTariffs.js` owns tariff loading, normalization, and regular-plan ordering.
 - `src/index.css` is the place for global styles; prefer utilities elsewhere.
 
 ## Code Style Guidelines
@@ -163,8 +167,8 @@ There are currently no extra Cursor or Copilot instructions to inherit.
 1. Confirm imports are clean and used.
 2. Keep file names and component names aligned.
 3. Run `npm run lint` after JS/JSX edits.
-4. Run `npm run build` after meaningful UI changes.
-5. Mention that no automated tests exist when reporting validation.
+4. Run `npm run test:run` after logic or interaction changes.
+5. Run `npm run build` after meaningful UI changes.
 
 ## Reality Checks
 - This is a frontend-only repository; do not invent backend services or server conventions.

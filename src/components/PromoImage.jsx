@@ -2,6 +2,12 @@ import promoImageDesktop from '../img/design-desktop.png'
 import promoImageMobile375 from '../img/design-mobile-375.png'
 import promoImageMobile320 from '../img/design-mobile-320.png'
 
+const TRAINER_FADE_GRADIENT =
+  'pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-[#23282900] via-[#232829b8] to-[#232829] sm:h-28 min-[970px]:h-32'
+
+const TRAINER_FADE_SHADOW =
+  'pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-[#232829] blur-xl sm:h-12 min-[970px]:h-14'
+
 export default function PromoImage() {
   return (
     <div className="flex w-full justify-center min-[970px]:h-full min-[970px]:justify-start">
@@ -17,12 +23,12 @@ export default function PromoImage() {
         </picture>
 
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-[#23282900] via-[#232829b8] to-[#232829] sm:h-28 min-[970px]:h-32"
+          className={TRAINER_FADE_GRADIENT}
           aria-hidden="true"
         />
 
         <div
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-[#232829] blur-xl sm:h-12 min-[970px]:h-14"
+          className={TRAINER_FADE_SHADOW}
           aria-hidden="true"
         />
       </div>
