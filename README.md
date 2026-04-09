@@ -1,5 +1,5 @@
 # Promo Tariff Landing
-
+[Demo](https://gym-landing-bice.vercel.app/)
 Адаптивное frontend-приложение на React + Vite для выбора тарифа с акцентом на promo UI, предсказуемый responsive layout и чистую пользовательскую логику.
 
 ## Что умеет проект
