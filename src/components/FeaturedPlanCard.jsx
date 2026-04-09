@@ -7,6 +7,7 @@ export default function FeaturedPlanCard({
   fullPrice,
   description,
   discountPercent,
+  isDiscountActive = true,
   isSelected = false,
   onSelect,
 }) {
@@ -19,7 +20,10 @@ export default function FeaturedPlanCard({
         isSelected ? 'border-[#F6A74B] bg-[#313738]' : 'border-white/10 hover:border-white/20'
       }`}
     >
-      <PlanDiscountBadge discountPercent={discountPercent} />
+      <PlanDiscountBadge
+        discountPercent={discountPercent}
+        isVisible={isDiscountActive}
+      />
 
       <span
         className="absolute right-4 top-4 text-[13px] font-semibold uppercase tracking-[0.12em] text-[#F6A74B] md:right-5 md:top-4 md:text-[14px] xl:right-7 xl:top-5 xl:text-[16px]"
@@ -38,6 +42,7 @@ export default function FeaturedPlanCard({
           <PlanPriceBlock
             price={price}
             fullPrice={fullPrice}
+            isDiscountActive={isDiscountActive}
             className="mt-2 min-[970px]:gap-1.5"
             priceClassName="text-[#FDB056] min-[970px]:text-[40px]"
             fullPriceClassName="text-white/42 min-[970px]:mt-0 min-[970px]:text-[16px] min-[970px]:text-white/45"

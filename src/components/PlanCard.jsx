@@ -7,6 +7,7 @@ export default function PlanCard({
   fullPrice,
   description,
   discountPercent,
+  isDiscountActive = true,
   isSelected = false,
   onSelect,
 }) {
@@ -24,7 +25,10 @@ export default function PlanCard({
       aria-pressed={isSelected}
       className={`${baseClasses} ${stateClasses}`}
     >
-      <PlanDiscountBadge discountPercent={discountPercent} />
+      <PlanDiscountBadge
+        discountPercent={discountPercent}
+        isVisible={isDiscountActive}
+      />
 
       <div className="flex h-full flex-1 items-center justify-center text-center">
         <div className="flex max-w-[18rem] flex-col items-center justify-center gap-3 min-[970px]:gap-4">
@@ -35,6 +39,7 @@ export default function PlanCard({
           <PlanPriceBlock
             price={price}
             fullPrice={fullPrice}
+            isDiscountActive={isDiscountActive}
             className="gap-1"
             priceClassName="text-white text-[30px] min-[970px]:text-[34px] xl:text-[38px]"
             fullPriceClassName="mt-0 text-white/42 text-[14px] min-[970px]:text-[15px]"

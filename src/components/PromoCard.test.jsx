@@ -38,12 +38,14 @@ vi.mock('./ConsentBlock.jsx', () => ({
 }))
 
 vi.mock('./BuyButton.jsx', () => ({
-  default: function MockBuyButton({ disabled, selectedPlan, children = 'Купить' }) {
+  default: function MockBuyButton({ disabled, hasError, onClick, selectedPlan, children = 'Купить' }) {
     return (
       <button
         type="button"
         disabled={disabled}
+        aria-invalid={hasError}
         aria-label={selectedPlan ? `Купить тариф ${selectedPlan.title}` : children}
+        onClick={() => onClick?.(selectedPlan)}
       >
         {children}
       </button>
@@ -79,21 +81,31 @@ describe('PromoCard', () => {
     vi.restoreAllMocks()
   })
 
-  it('disables purchase until consent is given and updates selected plan', async () => {
+  it('shows an error on buy click without consent and enables valid purchase after consent', async () => {
     render(<PromoCard />)
 
     const buyButton = await screen.findByRole('button', { name: 'Купить тариф Навсегда' })
 
-    expect(buyButton).toBeDisabled()
+    expect(buyButton).toBeEnabled()
     expect(screen.getByTestId('selected-plan-id')).toHaveTextContent('forever-0')
+
+    fireEvent.click(buyButton)
+
+    expect(buyButton).toHaveAttribute('aria-invalid', 'true')
 
     fireEvent.click(screen.getByRole('button', { name: 'Выбрать 1 месяц' }))
 
-    expect(screen.getByRole('button', { name: 'Купить тариф 1 месяц' })).toBeDisabled()
+    expect(screen.getByRole('button', { name: 'Купить тариф 1 месяц' })).toHaveAttribute(
+      'aria-invalid',
+      'true',
+    )
     expect(screen.getByTestId('selected-plan-id')).toHaveTextContent('month-1')
 
     fireEvent.click(screen.getByLabelText('Согласие с офертой рекуррентных платежей'))
 
-    expect(screen.getByRole('button', { name: 'Купить тариф 1 месяц' })).toBeEnabled()
+    expect(screen.getByRole('button', { name: 'Купить тариф 1 месяц' })).toHaveAttribute(
+      'aria-invalid',
+      'false',
+    )
   })
 })

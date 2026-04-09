@@ -4,6 +4,7 @@ import PlanCard from './PlanCard.jsx'
 import useTariffs from '../hooks/useTariffs.js'
 
 export default function PlansGrid({
+  isDiscountActive = true,
   selectedPlanId,
   onSelectPlan,
   onPlansLoaded,
@@ -33,6 +34,7 @@ export default function PlansGrid({
         <div>
           <FeaturedPlanCard
             {...featuredPlan}
+            isDiscountActive={isDiscountActive}
             isSelected={featuredPlan.planKey === selectedPlanId}
             onSelect={() => onSelectPlan?.(featuredPlan.planKey)}
           />
@@ -44,6 +46,7 @@ export default function PlansGrid({
           <PlanCard
             key={plan.planKey}
             {...plan}
+            isDiscountActive={isDiscountActive}
             isSelected={plan.planKey === selectedPlanId}
             onSelect={() => onSelectPlan?.(plan.planKey)}
           />

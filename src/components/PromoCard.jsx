@@ -9,21 +9,54 @@ import PlansGrid from './PlansGrid.jsx'
 import PromoImage from './PromoImage.jsx'
 import RefundGuaranteeCard from './RefundGuaranteeCard.jsx'
 import TimerBar from './TimerBar.jsx'
+import usePersistentTimer from '../hooks/usePersistentTimer.js'
 import useSelectedPlan from '../hooks/useSelectedPlan.js'
 
 export default function PromoCard() {
   const [isConsentChecked, setIsConsentChecked] = useState(false)
+  const [hasConsentError, setHasConsentError] = useState(false)
   const {
     selectedPlan,
     selectedPlanId,
     setSelectedPlanId,
     handlePlansLoaded,
   } = useSelectedPlan()
+  const {
+    formattedTime,
+    timerColor,
+    isExpired,
+    isExpiringSoon,
+  } = usePersistentTimer()
+
+  const handleConsentChange = (nextChecked) => {
+    setIsConsentChecked(nextChecked)
+
+    if (nextChecked) {
+      setHasConsentError(false)
+    }
+  }
+
+  const handleBuyClick = () => {
+    if (!selectedPlan) {
+      return
+    }
+
+    if (!isConsentChecked) {
+      setHasConsentError(true)
+      return
+    }
+
+    setHasConsentError(false)
+  }
 
   return (
     <div className="min-h-screen bg-[#232829]">
       <section>
-        <TimerBar />
+        <TimerBar
+          formattedTime={formattedTime}
+          timerColor={timerColor}
+          isExpiringSoon={isExpiringSoon}
+        />
         <div className="mx-auto mt-4 max-w-[1600px] px-4 pb-8 sm:px-5 md:mt-8 md:px-8 md:pb-10 lg:mt-12 lg:px-14 xl:px-[170px]">
           <h1 className="mb-8 text-[32px] leading-[0.95] text-white md:mb-10 md:text-[36px] lg:mb-[50px] lg:text-[40px] lg:whitespace-nowrap">
             Выбери подходящий для себя <span className="text-[#FDB056]">тариф</span>
@@ -36,6 +69,7 @@ export default function PromoCard() {
 
             <div className="min-w-0 w-full max-w-none">
               <PlansGrid
+                isDiscountActive={!isExpired}
                 selectedPlanId={selectedPlanId}
                 onSelectPlan={setSelectedPlanId}
                 onPlansLoaded={handlePlansLoaded}
@@ -47,10 +81,12 @@ export default function PromoCard() {
 
               <ConsentBlock
                 checked={isConsentChecked}
-                onChange={setIsConsentChecked}
+                onChange={handleConsentChange}
               />
               <BuyButton
-                disabled={!isConsentChecked || !selectedPlan}
+                disabled={!selectedPlan}
+                hasError={hasConsentError}
+                onClick={handleBuyClick}
                 selectedPlan={selectedPlan}
               />
             </div>

@@ -18,24 +18,31 @@ function TimerSparkle() {
   )
 }
 
-export default function TimerBar() {
-  const { formattedTime, timerColor } = usePersistentTimer()
+export default function TimerBar({
+  formattedTime,
+  timerColor,
+  isExpiringSoon = false,
+}) {
+  const fallbackTimer = usePersistentTimer()
+  const displayTime = formattedTime ?? fallbackTimer.formattedTime
+  const displayColor = timerColor ?? fallbackTimer.timerColor
+  const shouldBlink = isExpiringSoon || fallbackTimer.isExpiringSoon
 
   return (
-    <div className="flex flex-col items-center justify-center bg-[#1D5B43] px-4 py-3 text-center md:py-4">
+    <div className="sticky top-0 z-30 flex flex-col items-center justify-center bg-[#1D5B43] px-4 py-3 text-center shadow-[0_8px_24px_rgba(0,0,0,0.15)] md:py-4">
       <h2 className="text-[18px] font-medium text-white md:text-[24px]">
         Успейте открыть пробную неделю
       </h2>
 
       <div
-        className="flex items-center gap-x-2"
-        style={{ color: timerColor }}
+        className={`flex items-center gap-x-2 ${shouldBlink ? 'promo-timer-blink' : ''}`}
+        style={{ color: displayColor }}
         role="status"
         aria-live="polite"
       >
         <TimerSparkle />
         <p className="text-[32px] font-bold tracking-wider md:text-[40px]">
-          {formattedTime}
+          {displayTime}
         </p>
         <TimerSparkle />
       </div>

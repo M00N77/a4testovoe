@@ -1,15 +1,12 @@
 import { useEffect, useState } from 'react'
 
-const TIMER_DURATION_MS = 5 * 60 * 1000
+const TIMER_DURATION_MS = 2 * 60 * 1000
 const STORAGE_KEY = 'promo-timer-end-time'
 const TICK_MS = 1000
+const EXPIRING_SOON_MS = 30 * 1000
 
 function getTimerColor(timeLeftMs) {
-  if (timeLeftMs <= 0) {
-    return '#FFFFFF'
-  }
-
-  if (timeLeftMs < 3 * 60 * 1000) {
+  if (timeLeftMs <= EXPIRING_SOON_MS) {
     return '#EF4444'
   }
 
@@ -59,10 +56,10 @@ function setStoredEndTime(endTime) {
   }
 }
 
-function ensureEndTime(now) {
+function getOrCreateEndTime(now) {
   const storedEndTime = getStoredEndTime()
 
-  if (storedEndTime && storedEndTime > now) {
+  if (storedEndTime) {
     return storedEndTime
   }
 
@@ -77,7 +74,7 @@ function getInitialTimeLeft() {
   }
 
   const now = Date.now()
-  const endTime = ensureEndTime(now)
+  const endTime = getOrCreateEndTime(now)
 
   return Math.max(0, endTime - now)
 }
@@ -92,14 +89,11 @@ export default function usePersistentTimer() {
 
     const updateTimer = () => {
       const now = Date.now()
-      const endTime = ensureEndTime(now)
+      const endTime = getOrCreateEndTime(now)
       const nextTimeLeftMs = endTime - now
 
       if (nextTimeLeftMs <= 0) {
-        const nextEndTime = createEndTime(now)
-
-        setStoredEndTime(nextEndTime)
-        setTimeLeftMs(nextEndTime - now)
+        setTimeLeftMs(0)
         return
       }
 
@@ -119,5 +113,7 @@ export default function usePersistentTimer() {
     formattedTime: formatTime(timeLeftMs),
     timeLeftMs,
     timerColor: getTimerColor(timeLeftMs),
+    isExpired: timeLeftMs <= 0,
+    isExpiringSoon: timeLeftMs > 0 && timeLeftMs <= EXPIRING_SOON_MS,
   }
 }
